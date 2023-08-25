@@ -1,28 +1,35 @@
-import React, { useState, useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useLocation } from "react-router-dom"
-import { useDispatch, useSelector } from 'react-redux'
-import { AxiosCommentList, getCommentList, getCommentStatus, commentAction } from '../../reducers/getCommentSlice'
-import { selectCommentAuthor } from '../../reducers/getCommentSlice'
-import { selectUserData } from '../../reducers/getUserInfoSlice'
-import { AxiosUserData } from '../../reducers/getUserInfoSlice'
-import { selectDetailPosts, AxiosDetail } from '../../reducers/getPostDetailSlice'
+import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  AxiosCommentList,
+  getCommentList,
+  getCommentStatus,
+  commentAction,
+} from '../../reducers/getCommentSlice';
+import { selectCommentAuthor } from '../../reducers/getCommentSlice';
+import { selectUserData } from '../../reducers/getUserInfoSlice';
+import { AxiosUserData } from '../../reducers/getUserInfoSlice';
+import {
+  selectDetailPosts,
+  AxiosDetail,
+} from '../../reducers/getPostDetailSlice';
 import { deleteActions } from '../../reducers/deletePostSlice';
-import { DetailWrapper } from './FeedPostDetailStyle'
-import { AllWrap, ScrollMain, Heading } from '../../style/commonStyle'
+import { DetailWrapper } from './FeedPostDetailStyle';
+import { AllWrap, ScrollMain, Heading } from '../../style/commonStyle';
 import Modal from '../../components/postModal/PostModal';
-import FeedPost from '../../components/post/FeedPost'
-import { NavBack } from '../../components/navBack/NavBack'
-import Comment from '../../components/comment/Comment'
-import CommentList from '../../components/commentList/CommentList'
-
+import FeedPost from '../../components/post/FeedPost';
+import { NavBack } from '../../components/navBack/NavBack';
+import Comment from '../../components/comment/Comment';
+import CommentList from '../../components/commentList/CommentList';
 
 export default function FeedPostDetail() {
   const dispatch = useDispatch();
-  const URL = "https://mandarin.api.weniv.co.kr";
-  const accountname = JSON.parse(localStorage.getItem("accountname"));
+  const URL = 'https://api.mandarin.weniv.co.kr';
+  const accountname = JSON.parse(localStorage.getItem('accountname'));
   const UserIdPath = useLocation();
-  const PostId = UserIdPath.pathname.slice(15,);
+  const PostId = UserIdPath.pathname.slice(15);
   const postDetail = useSelector(selectDetailPosts).post;
   const commentList = useSelector(getCommentList).comments; //댓글리스트
   const commentStatus = useSelector(getCommentStatus); //상태
@@ -34,29 +41,29 @@ export default function FeedPostDetail() {
     dispatch(AxiosUserData(URL + `/profile/${accountname}`));
     dispatch(AxiosDetail(URL + `/post/${PostId}`));
     dispatch(AxiosCommentList(URL + `/post/${PostId}/comments/?limit=50`));
-  }, [])
+  }, []);
 
   const handleonClick = (postId, postAuthor) => {
     dispatch(deleteActions.checkType('comments'));
     dispatch(commentAction.selectCommentId(postId));
     dispatch(commentAction.selectCommentAuthor(postAuthor));
-    setModal(modal => !modal);
-  }
+    setModal((modal) => !modal);
+  };
 
   //모달
   let list = [];
   let alertTxt = [];
   if (accountname === commnetAuthor) {
-    list = { '삭제': '' };
+    list = { 삭제: '' };
     alertTxt = ['삭제하시겠어요?', '삭제'];
   } else {
-    list = { '신고하기': '' };
+    list = { 신고하기: '' };
     alertTxt = ['신고하시겠어요?', '신고'];
   }
 
   const closeModal = () => {
-    setModal(false)
-  }
+    setModal(false);
+  };
 
   return (
     <AllWrap>
@@ -67,24 +74,22 @@ export default function FeedPostDetail() {
         <Heading>SNS게시글 디테일 페이지</Heading>
         <NavBack />
       </header>
-      {
-        (modal === true) &&
+      {modal === true && (
         <Modal
           list={list}
           alertTxt={alertTxt}
           closeModal={closeModal}
-          setModal={setModal} />
-      }
+          setModal={setModal}
+        />
+      )}
       <ScrollMain>
-        {
-          postDetail?.id === PostId &&
+        {postDetail?.id === PostId && (
           <DetailWrapper>
             <FeedPost post={postDetail} />
           </DetailWrapper>
-        }
+        )}
         <ul>
-          {
-            commentStatus === "success" &&
+          {commentStatus === 'success' &&
             commentList?.map((comment) => {
               return (
                 <CommentList
@@ -93,15 +98,17 @@ export default function FeedPostDetail() {
                   time={comment.createdAt}
                   author={comment.author.accountname}
                   img={comment.author.image}
-                  onClick={() => handleonClick(comment.id, comment.author.accountname)}
+                  onClick={() =>
+                    handleonClick(comment.id, comment.author.accountname)
+                  }
                   setModal={setModal}
-                  modal={modal} />
-              )
-            })
-          }
+                  modal={modal}
+                />
+              );
+            })}
         </ul>
       </ScrollMain>
       <Comment img={userInfoList.image} />
     </AllWrap>
-  )
+  );
 }

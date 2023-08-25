@@ -12,10 +12,7 @@
       "version": "detect"
     }
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "parserOptions": {
     // ECMAScript 규격의 JSX 사용 여부: true
     "ecmaFeatures": {
@@ -26,15 +23,10 @@
     // parser의 export 형태를 설정, react는 module 기반의 import, export 사용
     "sourceType": "module"
   },
-  "plugins": [
-    "react"
-  ],
+  "plugins": ["react"],
   "rules": {
     // 들여쓰기 2칸만 허용
-    "indent": [
-      "error",
-      2
-    ],
+    "indent": ["error", 2],
     // var 키워드 사용 불가능
     "no-var": "error",
     // asynn 함수 내부에 await 키워드가 없으면 오류 발생

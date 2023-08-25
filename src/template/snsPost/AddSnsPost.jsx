@@ -1,17 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useDispatch } from 'react-redux';
-import { AxiosPost } from '../../reducers/getPostSlice'
-import axios from 'axios'
-import { AllWrap, Heading, PaddingMain } from '../../style/commonStyle'
-import { FileInput, FileUploader, TextInput, SingleImg, Img, TextLable, DeleteBtn, ImgWrapper } from './addSnsPostStyle'
-import { SnsUploadNav } from '../../components/navBack/NavBack'
-import { ImgUpload } from '../../pages/SignUpMain'
+import { AxiosPost } from '../../reducers/getPostSlice';
+import axios from 'axios';
+import { AllWrap, Heading, PaddingMain } from '../../style/commonStyle';
+import {
+  FileInput,
+  FileUploader,
+  TextInput,
+  SingleImg,
+  Img,
+  TextLable,
+  DeleteBtn,
+  ImgWrapper,
+} from './addSnsPostStyle';
+import { SnsUploadNav } from '../../components/navBack/NavBack';
+import { ImgUpload } from '../../pages/SignUpMain';
 
 export default function AddSnsPost() {
   const dispatch = useDispatch();
   const [content, setContent] = useState('');
-  const fileInput = useRef(null)
+  const fileInput = useRef(null);
   const [showImg, setShowImg] = useState([]);
   const [postImg, setPostImg] = useState([]);
   const [uploadBtn, SetuploadBtn] = useState(true);
@@ -28,7 +37,7 @@ export default function AddSnsPost() {
 
       if (TotalfileSize > maxSize) {
         alert('첨부파일의 총 사이즈는 10MB 이내로 등록 가능합니다.');
-        return
+        return;
       }
 
       const currentImgURL = URL.createObjectURL(fileArr[i]);
@@ -44,7 +53,7 @@ export default function AddSnsPost() {
 
     setPostImg(files);
     setShowImg(fileURLs);
-  }
+  };
 
   //삭제함수
   const handleDeleteImg = (id) => {
@@ -53,14 +62,14 @@ export default function AddSnsPost() {
   };
 
   let data = {
-    'post': {
-      'content': '',
-      'image': ''
-    }
-  }
+    post: {
+      content: '',
+      image: '',
+    },
+  };
 
   async function handlePostSns() {
-    const URL = 'https://mandarin.api.weniv.co.kr';
+    const URL = 'https://api.mandarin.weniv.co.kr';
     const REQ_PATH = '/post';
     let imgList = [];
     for (let i = 0; i < postImg?.length; i++) {
@@ -73,15 +82,17 @@ export default function AddSnsPost() {
     const accountname = JSON.parse(localStorage.getItem('accountname'));
 
     try {
-      await axios.post(URL + REQ_PATH, data, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-type': 'application/json'
-        },
-      })
-        .then(dispatch(AxiosPost(URL + REQ_PATH + '/' + accountname + '/userpost')))
-    }
-    catch (error) {
+      await axios
+        .post(URL + REQ_PATH, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-type': 'application/json',
+          },
+        })
+        .then(
+          dispatch(AxiosPost(URL + REQ_PATH + '/' + accountname + '/userpost'))
+        );
+    } catch (error) {
       console.log(error);
     }
   }
@@ -89,11 +100,10 @@ export default function AddSnsPost() {
   useEffect(() => {
     if (content.length > 0 && postImg.length > 0) {
       SetuploadBtn(false);
-    }
-    else {
+    } else {
       SetuploadBtn(true);
     }
-  }, [content, postImg])
+  }, [content, postImg]);
 
   return (
     <AllWrap>
@@ -106,29 +116,29 @@ export default function AddSnsPost() {
       </header>
       <PaddingMain>
         <TextLable htmlFor='snspost' />
-        <TextInput 
-          name='snspost' 
-          id='snspost' 
-          placeholder='게시글 입력하기 ...' 
-          value={content} 
-          onChange={(e) => { setContent(e.target.value) }} />
+        <TextInput
+          name='snspost'
+          id='snspost'
+          placeholder='게시글 입력하기 ...'
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
+        />
         <ImgWrapper>
-          {
-            showImg.length === 1 ?
-              showImg.map((image, id) => (
-                <div key={id} >
-                  <SingleImg key={id} src={image} />
-                  <DeleteBtn onClick={() => handleDeleteImg(id)} />
-                </div>
-              ))
-              :
-              showImg.map((image, id) => (
-                <div key={id} >
-                  <Img key={id} src={image} />
-                  <DeleteBtn onClick={() => handleDeleteImg(id)} />
-                </div>
-              ))
-          }
+          {showImg.length === 1
+            ? showImg.map((image, id) => (
+              <div key={id}>
+                <SingleImg key={id} src={image} />
+                <DeleteBtn onClick={() => handleDeleteImg(id)} />
+              </div>
+            ))
+            : showImg.map((image, id) => (
+              <div key={id}>
+                <Img key={id} src={image} />
+                <DeleteBtn onClick={() => handleDeleteImg(id)} />
+              </div>
+            ))}
         </ImgWrapper>
         <FileUploader htmlFor='input-file'>
           <FileInput
@@ -143,5 +153,5 @@ export default function AddSnsPost() {
         </FileUploader>
       </PaddingMain>
     </AllWrap>
-  )
+  );
 }

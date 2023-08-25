@@ -1,31 +1,31 @@
-import React, { useRef, useState } from 'react'
-import { useEffect } from 'react'
-import { Wrapper, FileUploader, ProfileImg, FileInput } from './profileStyle'
-import { useDispatch, useSelector } from 'react-redux/es/exports'
-import { AxiosUserData, selectUserData } from '../../reducers/getUserInfoSlice'
+import React, { useRef, useState } from 'react';
+import { useEffect } from 'react';
+import { Wrapper, FileUploader, ProfileImg, FileInput } from './profileStyle';
+import { useDispatch, useSelector } from 'react-redux/es/exports';
+import { AxiosUserData, selectUserData } from '../../reducers/getUserInfoSlice';
 
 export function Profile({ setImg }) {
   const fileInput = useRef(null);
-  const [showImg, setShowImg] = useState('https://mandarin.api.weniv.co.kr/1657812669741.png');
+  const [showImg, setShowImg] = useState(
+    'https://api.mandarin.weniv.co.kr/1657812669741.png'
+  );
 
   const onChange = (e) => {
     if (e.target.files[0]) {
       setShowImg(e.target.files[0]);
       setImg(e.target.files[0]);
-    } 
-    else {
-      setShowImg('https://mandarin.api.weniv.co.kr/1657812669741.png');
+    } else {
+      setShowImg('https://api.mandarin.weniv.co.kr/1657812669741.png');
       return;
     }
 
     if (e.target.files && e.target.files[0]) {
-
       let maxSize = 10 * 1024 * 1024;
       let fileSize = e.target.files[0].size;
-      
+
       if (fileSize > maxSize) {
         alert('첨부파일 사이즈는 10MB 이내로 등록 가능합니다.');
-        setShowImg('https://mandarin.api.weniv.co.kr/1657812669741.png');
+        setShowImg('https://api.mandarin.weniv.co.kr/1657812669741.png');
         return false;
       }
     }
@@ -35,20 +35,21 @@ export function Profile({ setImg }) {
       if (reader.readyState === 2) {
         setShowImg(reader.result);
       }
-    }
+    };
     reader.readAsDataURL(e.target.files[0]);
-  }
-
+  };
 
   return (
     <>
       <Wrapper>
         <ProfileImg
-          src={showImg} alt='user-img'
-          onClick={() => { fileInput.current.click() }}
+          src={showImg}
+          alt='user-img'
+          onClick={() => {
+            fileInput.current.click();
+          }}
         />
-        <FileUploader
-          htmlFor='input-file'>
+        <FileUploader htmlFor='input-file'>
           <FileInput
             id='input-file'
             type='file'
@@ -60,12 +61,12 @@ export function Profile({ setImg }) {
         </FileUploader>
       </Wrapper>
     </>
-  )
+  );
 }
 
 export function ProfileModifyShow({ setImg }) {
-  const fileInput = useRef(null)
-  const url = 'https://mandarin.api.weniv.co.kr';
+  const fileInput = useRef(null);
+  const url = 'https://api.mandarin.weniv.co.kr';
   const userInfoList = useSelector(selectUserData);
   const userInfoURl = useSelector(selectUserData).image;
   const [showImg, setShowImg] = useState('');
@@ -78,16 +79,15 @@ export function ProfileModifyShow({ setImg }) {
 
   useEffect(() => {
     setShowImg(userInfoURl);
-  }, [userInfoURl])
+  }, [userInfoURl]);
 
   const onChange = (e) => {
     if (e.target.files[0]) {
       setShowImg(e.target.files[0]);
       setImg(e.target.files[0]);
-    } 
-    else { 
-      setShowImg('https://mandarin.api.weniv.co.kr/1657812669741.png');
-      return
+    } else {
+      setShowImg('https://api.mandarin.weniv.co.kr/1657812669741.png');
+      return;
     }
 
     if (e.target.files && e.target.files[0]) {
@@ -106,19 +106,21 @@ export function ProfileModifyShow({ setImg }) {
       if (reader.readyState === 2) {
         setShowImg(reader.result);
       }
-    }
+    };
     reader.readAsDataURL(e.target.files[0]);
-  }
+  };
 
   return (
     <>
       <Wrapper>
         <ProfileImg
-          src={showImg} alt='user-img'
-          onClick={() => { fileInput.current.click() }}
+          src={showImg}
+          alt='user-img'
+          onClick={() => {
+            fileInput.current.click();
+          }}
         />
-        <FileUploader
-          htmlFor='input-file'>
+        <FileUploader htmlFor='input-file'>
           <FileInput
             id='input-file'
             type='file'
@@ -130,5 +132,5 @@ export function ProfileModifyShow({ setImg }) {
         </FileUploader>
       </Wrapper>
     </>
-  )
+  );
 }

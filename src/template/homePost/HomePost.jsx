@@ -1,38 +1,52 @@
-import React from 'react'
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AxiosWalkingPostDetail } from '../../reducers/getPostDetailSlice';
-import { UserChat } from '../../components/user/User'
-import { ContentTxt, DateTxt, PetImg, PostStyle, TextWrap, TitleTxt, WrapPost } from './homePostStyle'
+import { UserChat } from '../../components/user/User';
+import {
+  ContentTxt,
+  DateTxt,
+  PetImg,
+  PostStyle,
+  TextWrap,
+  TitleTxt,
+  WrapPost,
+} from './homePostStyle';
 
 export default function HomePost({ followpost }) {
   const dispatch = useDispatch();
-  const URL = "https://mandarin.api.weniv.co.kr";
+  const URL = 'https://api.mandarin.weniv.co.kr';
 
   const handleOnClick = (postId) => {
     dispatch(AxiosWalkingPostDetail(URL + `/product/detail/${postId}`));
-  }
+  };
 
   return (
-    <ul >
-      {
-        followpost && followpost.map((post) => {
+    <ul>
+      {followpost &&
+        followpost.map((post) => {
           return (
-            <PostStyle key={post._id} >
+            <PostStyle key={post._id}>
               <UserChat
                 userName={post.author.username}
                 userId={post.author.accountname}
-                img={post.author.image} />
-              <Link to={'/walkingpostdetail/' + post._id} onClick={() => { handleOnClick(post._id) }}>
+                img={post.author.image}
+              />
+              <Link
+                to={'/walkingpostdetail/' + post._id}
+                onClick={() => {
+                  handleOnClick(post._id);
+                }}
+              >
                 <WrapPost>
-                  {
-                    post.itemImage &&
-                      (post.itemImage?.search(URL) !== -1 || post.itemImage?.search('base64') !== -1 || post.itemImage?.search('.svg') !== -1)
-                      ?
-                      <PetImg src={post.itemImage} alt="펫이미지" />
-                      :
-                      <PetImg src={`${URL}/${post.itemImage}`} alt="펫이미지" />
-                  }
+                  {post.itemImage &&
+                  (post.itemImage?.search(URL) !== -1 ||
+                    post.itemImage?.search('base64') !== -1 ||
+                    post.itemImage?.search('.svg') !== -1) ? (
+                      <PetImg src={post.itemImage} alt='펫이미지' />
+                    ) : (
+                      <PetImg src={`${URL}/${post.itemImage}`} alt='펫이미지' />
+                    )}
                   <TextWrap>
                     <TitleTxt>{post.itemName}</TitleTxt>
                     <ContentTxt>{post.link}</ContentTxt>
@@ -41,9 +55,8 @@ export default function HomePost({ followpost }) {
                 </WrapPost>
               </Link>
             </PostStyle>
-          )
-        })
-      }
-    </ul >
-  )
+          );
+        })}
+    </ul>
+  );
 }

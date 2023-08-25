@@ -9,8 +9,8 @@
 
 ## 📑 프로젝트 소개
 - 배포 : https://pet-mate.vercel.app/
-- Test ID : `petmate@naver.com`
-- Test PW : `petmate`
+- Test ID : `sanE@test.com`
+- Test PW : `123456!`
 
 <br>
 
@@ -47,7 +47,7 @@
 - redux-thunk
 - styled components
 - react-hook-form
-- pigma
+- figma
 
 ### 개발 환경
 - 아토믹 디자인 패턴
@@ -90,7 +90,7 @@
 ### 팀원 문민주 (디자인 & 개발 리더)
 - 전체적인 프로젝트 UI 피그마 디자인
 - 로그인 기능 구현
-- 댓글기능
+- 댓글 기능
 - 게시글 랜더링 , 수정 , 삭제 , 생성 기능
 - `Redux-toolkit` 및 `Redux-thunk` 를 이용한 전역 상태 관리 
 - Token 관리 및 인증에 따른 페이지 라우팅
@@ -99,10 +99,11 @@
 
 ### 팀원 이세영 (문서 & 계획 리더)
 - 회의록 기록 및 문서 정리
-- 회원가입 유효성 검사 (react-hook-form)
-- 팔로워 & 팔로잉 리스트 페이지 UI 구현 및 팔로우 기능 구현
-- 채팅리스트 페이지 UI & 채팅룸 페이지 UI
-- Home포스트 및 SNS포스트 상세페이지 UI 구현 및 게시글 랜더링
+- `react-hook-form`을 이용하여 회원가입 유효성 검사
+- 팔로워 & 팔로잉 리스트 페이지 구현 및 팔로우 기능 구현
+- 채팅리스트 페이지 및 채팅룸 페이지 구현
+- Home 포스트 및 SNS포스트 상세페이지 구현 및 게시글 랜더링
+- 댓글/게시글 신고하기 기능 구현
 
 <br><br>
 

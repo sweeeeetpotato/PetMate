@@ -31,14 +31,14 @@ function MyProfile() {
     <>
       <Wrapper>
         <ColumnWapper>
-          <Link to='/myfollow' state={{ text: 'followers' }}>
+          <Link to='/follow' state={{ text: 'followers' }}>
             <FollowerCount>{userInfoList.followerCount}</FollowerCount>
           </Link>
           <FollowerText>followers</FollowerText>
         </ColumnWapper>
         <ProfileImg src={imgCheck(userInfoList.image)} />
         <ColumnWapper>
-          <Link to='/myfollow' state={{ text: 'followings' }}>
+          <Link to='/follow' state={{ text: 'followings' }}>
             <FollowerCount>{userInfoList.followingCount}</FollowerCount>
           </Link>
           <FollowerText>followings</FollowerText>

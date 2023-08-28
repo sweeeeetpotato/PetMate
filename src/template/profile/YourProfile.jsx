@@ -94,7 +94,7 @@ function YourProfile({ userId }) {
       <Wrapper>
         <ColumnWapper>
           <Link
-            to='/yourfollow'
+            to='/follow'
             state={{ text: 'followers', userId: accountname }}
           >
             <FollowerCount>{yourInfoList.followerCount}</FollowerCount>
@@ -104,7 +104,7 @@ function YourProfile({ userId }) {
         <ProfileImg src={imgCheck(yourInfoList.image)} />
         <ColumnWapper>
           <Link
-            to='/yourfollow'
+            to='/follow'
             state={{ text: 'followings', userId: accountname }}
           >
             <FollowerCount>{yourInfoList.followingCount}</FollowerCount>

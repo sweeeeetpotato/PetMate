@@ -5,7 +5,7 @@ import { NavBack } from '../../components/navBack/NavBack';
 import { UserFollow } from '../../components/user/User';
 import TabMenu from '../../components/tabMenu/TabMenu';
 import { AllWrap } from '../../style/commonStyle';
-import useGetFollowList from '../../hook/query/useGetFollowList';
+import useGetData from '../../hook/query/useGetData';
 import { FollowMain } from './followStyle';
 
 function Follow() {
@@ -15,11 +15,11 @@ function Follow() {
     ? useLocation().state?.userId
     : JSON.parse(localStorage.getItem('accountname'));
   const URL_PART = NavBackTitle === 'followers' ? 'follower' : 'following';
-  const { isLoading, data } = useGetFollowList(
+  const { isLoading, data } = useGetData(
     URL + `/profile/${accountname}/${URL_PART}?limit=1000`,
     NavBackTitle
   );
-
+  console.log(isLoading);
   return (
     <AllWrap>
       <Helmet>

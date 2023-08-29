@@ -8,7 +8,7 @@
 <br><br>
 
 ## 📑 프로젝트 소개
-- 배포 : https://pet-mate.vercel.app/
+- 배포 : https://petmate.vercel.app/
 - Test ID : `sanE@test.com`
 - Test PW : `123456!`
 
@@ -104,6 +104,7 @@
 - 채팅리스트 페이지 및 채팅룸 페이지 구현
 - Home 포스트 및 SNS포스트 상세페이지 구현 및 게시글 랜더링
 - 댓글/게시글 신고하기 기능 구현
+- `react-query`를 사용하여 데이터 처리
 
 <br><br>
 

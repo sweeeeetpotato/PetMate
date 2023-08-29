@@ -45,6 +45,7 @@
 - React
 - redux-toolkit
 - redux-thunk
+- react-query
 - styled components
 - react-hook-form
 - figma

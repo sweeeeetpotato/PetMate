@@ -1,38 +1,45 @@
-import React, { useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { NavWrapper, Img, NavBtn, NavTxt } from './navBackStyle'
-import { SaveBtn, PostSaveBtn, UploadBtn } from '../button/Button'
-import { SearchInput } from '../input/Input'
-import Modal from '../postModal/PostModal'
-import arrow from '../../assets/icon-arrow-left.svg'
-import vertical from '../../assets/icon-more-vertical.svg'
-import searchbar from '../../assets/icon-search.svg'
+import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { NavWrapper, Img, NavBtn, NavTxt } from './navBackStyle';
+import { SaveBtn, PostSaveBtn, UploadBtn } from '../button/Button';
+import { SearchInput } from '../input/Input';
+import Modal from '../postModal/PostModal';
+import arrow from '../../assets/icon-arrow-left.svg';
+import vertical from '../../assets/icon-more-vertical.svg';
+import searchbar from '../../assets/icon-search.svg';
+import { useQueryClient } from 'react-query';
 
 export function NavBack(props) {
   const navigate = useNavigate();
-  const linkName = useLocation().pathname.slice(0, );
+  const linkName = useLocation().pathname.slice(0);
+  const NavBackTitle = useLocation().state?.text;
+  const queryClient = useQueryClient();
 
   const goBack = () => {
     navigate(-1);
-  }
+    if (NavBackTitle === 'followings' || NavBackTitle === 'followers') {
+      console.log('초기화');
+      queryClient.invalidateQueries(['myfollowings']);
+    }
+  };
 
   let list = [];
   let alertTxt = [];
 
   if (linkName === '/chatroom') {
-    list = { '채팅방 나가기': '/chatpage', '신고하기': '' };
+    list = { '채팅방 나가기': '/chatpage', 신고하기: '' };
   } else {
-    list = { '설정 및 개인정보': '/profilemodify', '로그아웃': '' };
+    list = { '설정 및 개인정보': '/profilemodify', 로그아웃: '' };
     alertTxt = ['로그아웃하시겠어요?', '로그아웃'];
   }
 
   const [modal, setModal] = useState(false);
   const toggleModal = () => {
-    setModal(modal => !modal);
-  }
+    setModal((modal) => !modal);
+  };
   const closeModal = () => {
     setModal(false);
-  }
+  };
 
   return (
     <header>
@@ -41,11 +48,17 @@ export function NavBack(props) {
           <Img src={arrow} alt='뒤로가기 버튼' />
         </NavBtn>
         <NavTxt>{props.text}</NavTxt>
-        <NavBtn >
-          <Img src={vertical} alt='설정 및 로그아웃 버튼' onClick={toggleModal} />
+        <NavBtn>
+          <Img
+            src={vertical}
+            alt='설정 및 로그아웃 버튼'
+            onClick={toggleModal}
+          />
         </NavBtn>
       </NavWrapper>
-      {modal === true && <Modal list={list} closeModal={closeModal} alertTxt={alertTxt} />}
+      {modal === true && (
+        <Modal list={list} closeModal={closeModal} alertTxt={alertTxt} />
+      )}
     </header>
   );
 }
@@ -55,7 +68,7 @@ export function NavTxtSearch({ placeholder, onChange }) {
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
-  }
+  };
   return (
     <NavWrapper>
       <NavBtn onClick={goBack}>
@@ -85,7 +98,7 @@ export function ProfileSaveNav({ profileSave }) {
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
-  }
+  };
   return (
     <NavWrapper>
       <NavBtn onClick={goBack}>
@@ -100,7 +113,7 @@ export function PostSaveNav({ onClick, disabled, link }) {
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
-  }
+  };
   return (
     <NavWrapper>
       <NavBtn onClick={goBack}>
@@ -115,7 +128,7 @@ export function SnsUploadNav({ disabled, onClick }) {
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
-  }
+  };
   return (
     <NavWrapper>
       <NavBtn onClick={goBack}>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { ChatBtn, FollowToggleBtn } from '../button/Button.jsx';
 import {
   ChatListProfileIcon,
@@ -17,6 +16,9 @@ import {
 } from './userStyle.js';
 import moreIcon from '../../assets/icon-more-vertical-small.svg';
 import { Link } from 'react-router-dom';
+import useGetData from '../../hook/query/useGetData.jsx';
+import useFollow from '../../hook/mutation/useFollow.jsx';
+import useUnFollow from '../../hook/mutation/useUnFollow.jsx';
 
 //이미지 체크 함수
 export function imgCheck(img) {
@@ -58,82 +60,41 @@ export function User({ userName, userId, img, keyword }) {
 
 export function UserFollow({ userName, userId, img }) {
   const URL = 'https://api.mandarin.weniv.co.kr';
-  const token = JSON.parse(localStorage.getItem('token'));
-  const [isFollow, setIsFollow] = useState();
   const MyId = JSON.parse(localStorage.getItem('accountname'));
+  const { data } = useGetData(`${URL}/profile/${userId}`, userId);
+  const [isFollow, setIsFollow] = useState();
+  const followMutation = useFollow(userId);
+  const unfollowMutation = useUnFollow(userId);
 
   function onClick() {
     if (!isFollow) {
+      followMutation.mutate(`${URL}/profile/${userId}/follow`);
       setIsFollow(true);
-      postUserFollow();
     } else {
+      unfollowMutation.mutate(`${URL}/profile/${userId}/unfollow`);
       setIsFollow(false);
-      deleteUserFollow();
     }
   }
 
   useEffect(() => {
-    getYourInfo();
-  }, []);
+    data && setIsFollow(data.profile.isfollow);
+  }, [data]);
 
-  async function getYourInfo() {
-    await axios
-      .get(URL + `/profile/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-type': 'application/json',
-        },
-      })
-      .then((res) => {
-        setIsFollow(res.data.profile.isfollow);
-      });
-  }
-
-  const data = {};
-  async function postUserFollow() {
-    await axios
-      .post(URL + `/profile/${userId}/follow`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-type': 'application/json',
-        },
-      })
-      .then((res) => {
-        setIsFollow(res.data.profile.isfollow);
-      });
-  }
-
-  // 언팔로우 정보 받아오는 함수
-  async function deleteUserFollow() {
-    await axios
-      .delete(URL + `/profile/${userId}/unfollow`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-type': 'application/json',
-        },
-      })
-      .then((res) => {
-        setIsFollow(res.data.profile.isfollow);
-      });
-  }
-
-  return (
-    <>
-      <Wrapper between>
-        {userId === MyId ? (
-          <Link to='/profilepage'>
-            <User userName={userName} userId={userId} img={img} />
-          </Link>
-        ) : (
-          <Link to='/userprofile' state={{ userId: userId }}>
-            <User userName={userName} userId={userId} img={img} />
-          </Link>
-        )}
-        {userId !== MyId && isFollow !== undefined && (
-          <FollowToggleBtn onClick={onClick} isFollow={isFollow} />
-        )}
-      </Wrapper>
-    </>
+  return (  
+    <Wrapper between>
+      {userId === MyId ? (
+        <Link to='/profilepage'>
+          <User userName={userName} userId={userId} img={img} />
+        </Link>
+      ) : (
+        <Link to='/userprofile' state={{ userId: userId }}>
+          <User userName={userName} userId={userId} img={img} />
+        </Link>
+      )}
+      {userId !== MyId && isFollow !== undefined && (
+        <FollowToggleBtn onClick={onClick} isFollow={isFollow} />
+      )}
+    </Wrapper>
   );
 }
 
@@ -141,30 +102,23 @@ export function UserMore({ userName, userId, img, onClick }) {
   const MyId = JSON.parse(localStorage.getItem('accountname'));
 
   return (
-    <>
-      <Wrapper between>
-        {userId === MyId ? (
-          <Link to='/profilepage'>
-            <User
-              userName={userName}
-              userId={userId}
-              img={img}
-              alt='내 프로필'
-            />
-          </Link>
-        ) : (
-          <Link to='/userprofile' state={{ userId: userId }}>
-            <User
-              userName={userName}
-              userId={userId}
-              img={img}
-              alt='유저 프로필'
-            />
-          </Link>
-        )}
-        <MoreIcon src={moreIcon} onClick={onClick} alt='게시글 설정' />
-      </Wrapper>
-    </>
+    <Wrapper between>
+      {userId === MyId ? (
+        <Link to='/profilepage'>
+          <User userName={userName} userId={userId} img={img} alt='내 프로필' />
+        </Link>
+      ) : (
+        <Link to='/userprofile' state={{ userId: userId }}>
+          <User
+            userName={userName}
+            userId={userId}
+            img={img}
+            alt='유저 프로필'
+          />
+        </Link>
+      )}
+      <MoreIcon src={moreIcon} onClick={onClick} alt='게시글 설정' />
+    </Wrapper>
   );
 }
 

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-
+import { Link, useLocation } from 'react-router-dom';
 import {
   IdText,
   IntroText,
@@ -18,85 +16,41 @@ import { ProfileFollowToggleBtn } from '../../components/button/Button';
 import { imgCheck } from '../../components/user/User';
 import chatIcon from '../../assets/icon-message.svg';
 import shareIcon from '../../assets/icon-share.svg';
+import useGetData from '../../hook/query/useGetData';
+import useFollow from '../../hook/mutation/useFollow';
+import useUnFollow from '../../hook/mutation/useUnFollow';
 
 function YourProfile({ userId }) {
   const URL = 'https://api.mandarin.weniv.co.kr';
-  const token = JSON.parse(localStorage.getItem('token'));
   const accountname = userId;
   const [yourInfoList, setYourInfoList] = useState([]);
   const [isFollow, setIsFollow] = useState();
+  const { data } = useGetData(`${URL}/profile/${accountname}`, accountname);
+  const followMutation = useFollow(accountname);
+  const unfollowMutation = useUnFollow(accountname);
 
   function onClick() {
     if (!isFollow) {
+      followMutation.mutate(`${URL}/profile/${accountname}/follow`);
       setIsFollow(true);
-      postUserFollow();
     } else {
+      unfollowMutation.mutate(`${URL}/profile/${accountname}/unfollow`);
       setIsFollow(false);
-      deleteUserFollow();
     }
   }
 
   useEffect(() => {
-    getYourInfo();
-  }, []);
-
-  // your정보 받아오는 함수
-  async function getYourInfo() {
-    await axios
-      .get(URL + `/profile/${accountname}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-type': 'application/json',
-        },
-      })
-      .then((res) => {
-        setYourInfoList(res.data.profile);
-        setIsFollow(res.data.profile.isfollow);
-      });
-  }
-
-  // 팔로우 정보 받아오는 함수
-  async function postUserFollow() {
-    await axios
-      .post(
-        URL + `/profile/${accountname}/follow`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-type': 'application/json',
-          },
-        }
-      )
-      .then((res) => {
-        setYourInfoList(res.data.profile);
-        setIsFollow(res.data.profile.isfollow);
-      });
-  }
-
-  // 언팔로우 정보 받아오는 함수
-  async function deleteUserFollow() {
-    await axios
-      .delete(URL + `/profile/${accountname}/unfollow`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-type': 'application/json',
-        },
-      })
-      .then((res) => {
-        setYourInfoList(res.data.profile);
-        setIsFollow(res.data.profile.isfollow);
-      });
-  }
+    if (data) {
+      setYourInfoList(data.profile);
+      setIsFollow(data.profile.isfollow);
+    }
+  }, [data]);
 
   return (
     <>
       <Wrapper>
         <ColumnWapper>
-          <Link
-            to='/follow'
-            state={{ text: 'followers', userId: accountname }}
-          >
+          <Link to='/follow' state={{ text: 'followers', userId: accountname }}>
             <FollowerCount>{yourInfoList.followerCount}</FollowerCount>
             <FollowerText>followers</FollowerText>
           </Link>
@@ -124,7 +78,7 @@ function YourProfile({ userId }) {
           backColor={'white'}
           width={34}
           height={34}
-        ></OnlyIconButton>
+        />
         {isFollow !== undefined && (
           <ProfileFollowToggleBtn onClick={onClick} isFollow={isFollow} />
         )}
@@ -134,7 +88,7 @@ function YourProfile({ userId }) {
           backColor={'white'}
           width={34}
           height={34}
-        ></OnlyIconButton>
+        />
       </ButtonWrap>
     </>
   );

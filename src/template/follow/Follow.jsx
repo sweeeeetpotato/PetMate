@@ -4,22 +4,25 @@ import { Helmet } from 'react-helmet-async';
 import { NavBack } from '../../components/navBack/NavBack';
 import { UserFollow } from '../../components/user/User';
 import TabMenu from '../../components/tabMenu/TabMenu';
-import { AllWrap } from '../../style/commonStyle';
 import useGetData from '../../hook/query/useGetData';
+import { AllWrap } from '../../style/commonStyle';
 import { FollowMain } from './followStyle';
 
 function Follow() {
   const URL = `https://api.mandarin.weniv.co.kr`;
-  const NavBackTitle = useLocation().state?.text;
   const accountname = useLocation().state?.userId
     ? useLocation().state?.userId
     : JSON.parse(localStorage.getItem('accountname'));
+  const NavBackTitle = useLocation().state?.text;
   const URL_PART = NavBackTitle === 'followers' ? 'follower' : 'following';
+  const uniqueKey = useLocation().state?.userId
+    ? `${useLocation().state?.userId}${NavBackTitle}`
+    : `my${NavBackTitle}`;
   const { isLoading, data } = useGetData(
     URL + `/profile/${accountname}/${URL_PART}?limit=1000`,
-    NavBackTitle
+    uniqueKey
   );
-  console.log(isLoading);
+
   return (
     <AllWrap>
       <Helmet>
